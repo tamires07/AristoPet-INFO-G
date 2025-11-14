@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Resultados da Busca</title>
+</head>
+
+<body>
+    <h1>Resultados da busca por "{{ query }}"</h1>
+
+    {% if resultados %}
+    <ul>
+        {% for animal in resultados %}
+        <li>{{ animal.nome }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Nenhum animal encontrado para "{{ query }}"</p>
+    {% endif %}
+
+    <a href="{% url 'index' %}">Voltar para a página inicial</a>
+</body>
+
+</html>

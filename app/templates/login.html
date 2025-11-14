@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Incluindo Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+    <style>
+        body{
+            background: #ffff;
+        }
+
+        .container{
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            justify-content: center;
+        }
+
+        .formulario{
+            background-color: #ffefcf;
+            padding: 10px;
+            margin-top: 5vh;
+            margin-bottom: 15vh;
+            margin-left: 80vh;
+            margin-right: 80vh;
+            border: solid 1px grey;
+            border-radius: 30px;
+        }
+
+        .formulario, input, select, textarea{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {% include 'partials/header.html' %}
+
+    <!-- Mensagem de boas vindas -->
+    
+    <div class="container text-center">
+        <h1><b>Realize seu Login</b></h1>
+    </div>
+
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form class="formulario" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="email" class="form-label"><b>Email</b></label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu email" required>
+        </div>
+        <div class="mb-3">
+            <label for="senha" class="form-label"><b>Senha</b></label>
+            <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Enviar</button>
+    </form>
+
+    {% include 'partials/footer.html' %}
+    <!-- Incluindo jQuery e Bootstrap JS -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</body>
+</html>
