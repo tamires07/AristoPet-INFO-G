@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="icon" href="{% static 'img/icon.ico' %}" type="image/x-icon"/>
+    <style>
+        .container{
+            display: flex;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {% include 'partials/header.html' %}
+<h1>Eventos</h1>
+
+<h2>{% if evento %}Editar Evento{% else %}Novo Evento{% endif %}</h2>
+
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        
+        Nome:
+        <input type="text" name="nome" value="{{ evento.nome|default:'' }}"><br>
+    
+        Instituição:
+        <input type="text" name="instituicao" value="{{ evento.instituicao|default:'' }}"><br>
+    
+        Data e Hora:
+        <input type="datetime-local" name="data_hora" 
+               value="{{ evento.data_hora|date:'Y-m-d\\TH:i' }}"><br>
+    
+        Local:
+        <input type="text" name="local" value="{{ evento.local|default:'' }}"><br>
+    
+        Descrição:
+        <textarea name="descricao">{{ evento.descricao|default:'' }}</textarea><br>
+    
+        <button type="submit">{% if evento %}Salvar{% else %}Criar{% endif %}</button>
+    </form>
+</div>
+
+<hr>
+
+<!-- LISTA DE EVENTOS -->
+<h2>Lista de Eventos</h2>
+
+<ul>
+{% for e in eventos %}
+    <li>
+        <strong>{{ e.nome }}</strong> — {{ e.data_hora }}
+        <a href="{% url 'evento_edit' e.id %}">Editar</a>
+    </li>
+{% endfor %}
+</ul>
+{% include 'partials/footer.html' %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+</body>
+</html>

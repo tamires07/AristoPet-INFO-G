@@ -15,7 +15,11 @@ urlpatterns = [
     path('deletaranimal/<int:pk>/', deletarAnimalView, name='deletaranimal'),
     path('cadastro/', cadastrar_usuario, name='cadastro'),
     path('logout/', logout_view, name='logout'),
-    path('animal/<int:pk>/', detalhe_animal, name='detalheanimal'),
+    path('animal/<int:pk>/', detalheAnimal, name='detalheanimal'),
+    path('editar-animal/<int:pk>/', editarAnimalView, name='editaranimal'),
+    path("evento/", eventos, name="evento"),
+    path("eventos/<int:id>/", eventos, name="evento_edit"),
+    path('perfil/', perfil_usuario, name='perfil'),
 ]
 
 if settings.DEBUG:

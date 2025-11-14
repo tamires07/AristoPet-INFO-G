@@ -4,19 +4,84 @@
 <head>
     <meta charset="UTF-8" />
     <title>Resultados da Busca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin: 8px 0;
+            padding: 10px 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .no-results {
+            text-align: center;
+            color: #b00;
+            background-color: #ffe6e6;
+            border: 1px solid #f5c2c2;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Resultados da busca por "{{ query }}"</h1>
+    <h1>Resultados da busca:</h1>
 
-    {% if resultados %}
-    <ul>
-        {% for animal in resultados %}
-        <li>{{ animal.nome }}</li>
-        {% endfor %}
-    </ul>
+    {% if resultados_animais or resultados_eventos %}
+        
+        {% if resultados_animais %}
+        <ul>
+            {% for animal in resultados_animais %}
+            <li>{{ animal.nome }} - {{ animal.especie }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <!-- Eventos -->
+        {% if resultados_eventos %}
+        <ul>
+            {% for evento in resultados_eventos %}
+            <li>{{ evento.nome }} - {{ evento.data_hora }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
     {% else %}
-    <p>Nenhum animal encontrado para "{{ query }}"</p>
+        <p>Nenhum resultado encontrado para "{{ query }}"</p>
     {% endif %}
 
     <a href="{% url 'index' %}">Voltar para a página inicial</a>

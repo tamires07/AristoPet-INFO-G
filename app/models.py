@@ -69,7 +69,7 @@ class Adocao(models.Model):
 
 class Evento(models.Model):
     nome = models.CharField(max_length=100, verbose_name="Nome do Evento")
-    instituicao = models.ForeignKey(Instituicao, on_delete=models.CASCADE, verbose_name="Instituição")
+    instituicao = models.CharField(max_length=200, verbose_name="Instituição")
     data_hora = models.DateTimeField(verbose_name="Data e Hora do Evento")
     local = models.CharField(max_length=200, verbose_name="Local do Evento")
     descricao = models.TextField(verbose_name="Descrição do Evento")
