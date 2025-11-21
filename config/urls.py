@@ -20,6 +20,9 @@ urlpatterns = [
     path("evento/", eventos, name="evento"),
     path("eventos/<int:id>/", eventos, name="evento_edit"),
     path('perfil/', perfil_usuario, name='perfil'),
+    path('quero-adotar/<int:animal_id>/', quero_adotar_view, name='quero_adotar'),
+    path('chat/<int:conversa_id>/', chat_view, name='chat'),
+    path('minhas-conversas/', minhas_conversas_view, name='minhas_conversas'),
 ]
 
 if settings.DEBUG:

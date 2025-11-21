@@ -80,3 +80,29 @@ class Evento(models.Model):
     class Meta:
         verbose_name = "Evento"
         verbose_name_plural = "Eventos"
+
+class Conversa(models.Model):
+    animal = models.ForeignKey(Animal, on_delete=models.CASCADE, verbose_name="Animal")
+    participante_doador = models.ForeignKey(Pessoa, on_delete=models.CASCADE, related_name="conversas_como_doador")
+    participante_adotante = models.ForeignKey(Pessoa, on_delete=models.CASCADE, related_name="conversas_como_adotante")
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    ativa = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Conversa"
+        verbose_name_plural = "Conversas"
+
+class Mensagem(models.Model):
+    conversa = models.ForeignKey(Conversa, on_delete=models.CASCADE, related_name="mensagens")
+    remetente = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
+    texto = models.TextField()
+    data_envio = models.DateTimeField(auto_now_add=True)
+    lida = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Mensagem"
+        verbose_name_plural = "Mensagens"
+        ordering = ['data_envio']
+
+    def __str__(self):
+        return f"{self.remetente.nome}: {self.texto[:20]}..."

@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <title>Cabeçalho</title>
     <style>
         .navbar-custom {
             background-color: #33605a;
             font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .chat{
+            color: white;
+            margin-right: 30px;
         }
         
     </style>
@@ -44,6 +50,18 @@
                         <a class="nav-link active" aria-current="page" href="/pessoa/">Cadastro/Login</a>
                     </li>   
                 </ul>
+
+                {% if request.session.pessoa_id %}
+                    <a class="nav-link position-relative mx-2 chat" href="{% url 'minhas_conversas' %}" style="padding-right: 2rem !important;">
+                        <i class="bi bi-chat-dots"></i> Chats
+                        {% if mensagens_nao_lidas > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6em;">
+                                {{ mensagens_nao_lidas }}
+                            </span>
+                        {% endif %}
+                    </a>
+                {% endif %}
+
                 <form class="d-flex" role="search" action="{% url 'buscar' %}" method="GET">
                     <input name="q" class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search"/>
                     <button class="btn btn-success" type="submit">Buscar</button>

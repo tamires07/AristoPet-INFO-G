@@ -3,9 +3,10 @@ from .models import *
 from django.views import View
 from django.contrib import messages
 from .forms import *
-from .models import Animal
+from .models import Animal, Pessoa, Conversa, Mensagem
 from django.contrib.auth.hashers import check_password
 from datetime import datetime
+from django.utils import timezone
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
@@ -211,3 +212,83 @@ def perfil_usuario(request):
     }
     
     return render(request, 'perfil.html', context)
+
+def quero_adotar_view(request, animal_id):
+    animal = get_object_or_404(Animal, id=animal_id)
+    adotante = get_object_or_404(Pessoa, id=request.session.get('pessoa_id'))
+    
+    conversa_existente = Conversa.objects.filter(
+        animal=animal,
+        participante_adotante=adotante
+    ).first()
+    
+    if conversa_existente:
+        return redirect('chat', conversa_id=conversa_existente.id)
+    
+    conversa = Conversa.objects.create(
+        animal=animal,
+        participante_doador=animal.doador,
+        participante_adotante=adotante
+    )
+    
+    Mensagem.objects.create(
+        conversa=conversa,
+        remetente=animal.doador,
+        texto=f"Olá! Obrigado pelo interesse em adotar o {animal.nome}. Como posso ajudar?"
+    )
+    
+    messages.success(request, f'Conversa iniciada com {animal.doador.nome}!')
+    return redirect('chat', conversa_id=conversa.id)
+
+
+def chat_view(request, conversa_id):
+    conversa = get_object_or_404(Conversa, id=conversa_id)
+    pessoa_logada = get_object_or_404(Pessoa, id=request.session.get('pessoa_id'))
+    
+    if pessoa_logada not in [conversa.participante_doador, conversa.participante_adotante]:
+        messages.error(request, 'Você não tem acesso a esta conversa.')
+        return redirect('index')
+    
+    if request.method == 'POST':
+        texto = request.POST.get('mensagem')
+        if texto:
+            Mensagem.objects.create(
+                conversa=conversa,
+                remetente=pessoa_logada,
+                texto=texto
+            )
+            return redirect('chat', conversa_id=conversa_id)
+    
+    mensagens = Mensagem.objects.filter(conversa=conversa)
+    
+    context = {
+        'conversa': conversa,
+        'mensagens': mensagens,
+        'pessoa_logada': pessoa_logada,
+    }
+    
+    return render(request, 'chat.html', context)
+
+
+def minhas_conversas_view(request):
+    pessoa_logada = get_object_or_404(Pessoa, id=request.session.get('pessoa_id'))
+    
+    conversas = Conversa.objects.filter(
+        models.Q(participante_doador=pessoa_logada) |
+        models.Q(participante_adotante=pessoa_logada)
+    ).order_by('-data_criacao')
+
+
+    mensagens_nao_lidas = 0
+    for conversa in conversas:
+        mensagens_nao_lidas += conversa.mensagens.filter(
+            lida=False
+        ).exclude(remetente=pessoa_logada).count()
+    
+    context = {
+        'conversas': conversas,
+        'pessoa_logada': pessoa_logada,
+        'mensagens_nao_lidas': mensagens_nao_lidas
+    }
+    
+    return render(request, 'minhas_conversas.html', context)

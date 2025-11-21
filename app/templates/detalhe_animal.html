@@ -20,6 +20,27 @@
         <p><b>Cidade:</b> {{ animal.cidade }}</p>
         <p><b>Descrição:</b> {{ animal.descricao }}</p>
 
+        <div class="card mt-4">
+            <div class="card-body text-center">
+                <h5 class="card-title">Interessado em adotar {{ animal.nome }}?</h5>
+                <p class="card-text">Entre em contato com o doador para combinar os detalhes da adoção.</p>
+                
+                {% if request.session.pessoa_id %}
+                    {% if request.session.pessoa_id != animal.doador.id %}
+                        <a href="{% url 'quero_adotar' animal.id %}" class="btn btn-success btn-lg">
+                            🐾 Quero Adotar!
+                        </a>
+                    {% else %}
+                        <p class="text-muted">(Você é o doador deste animal)</p>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline-success">
+                        Faça login para adotar
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
         <a href="{% url 'index' %}" class="btn btn-secondary">Voltar</a>
     </div>
 
