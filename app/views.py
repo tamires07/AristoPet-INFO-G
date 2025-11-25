@@ -213,6 +213,65 @@ def perfil_usuario(request):
     
     return render(request, 'perfil.html', context)
 
+def editar_perfil_view(request):
+    pessoa_id = request.session.get('pessoa_id')
+    if not pessoa_id:
+        messages.error(request, 'Você precisa estar logado.')
+        return redirect('login')
+    
+    pessoa = get_object_or_404(Pessoa, id=pessoa_id)
+    
+    if request.method == 'POST':
+        print("📸 DEBUG: Arquivos recebidos:", request.FILES)
+        
+        pessoa.nome = request.POST.get('nome')
+        pessoa.email = request.POST.get('email')
+        pessoa.telefone = request.POST.get('telefone')
+        pessoa.endereco = request.POST.get('endereco')
+        pessoa.data_nasc = request.POST.get('data_nasc')
+        
+        if 'fotoperfil' in request.FILES:
+            foto = request.FILES['fotoperfil']
+            print(f"✅ Foto recebida: {foto.name} ({foto.size} bytes)")
+            pessoa.fotoperfil = foto
+        else:
+            print("❌ Nenhuma foto recebida no request.FILES")
+        
+        if Pessoa.objects.filter(email=pessoa.email).exclude(id=pessoa.id).exists():
+            messages.error(request, 'Este email já está em uso.')
+        else:
+            pessoa.save()
+            print(f"✅ Pessoa salva: {pessoa.nome}, Foto: {pessoa.fotoperfil}")
+            messages.success(request, 'Perfil atualizado com sucesso!')
+            return redirect('perfil')
+    
+    return render(request, 'editar_perfil.html', {'pessoa': pessoa})
+
+def excluir_perfil_view(request):
+    pessoa_id = request.session.get('pessoa_id')
+    if not pessoa_id:
+        messages.error(request, 'Você precisa estar logado.')
+        return redirect('login')
+    
+    pessoa = get_object_or_404(Pessoa, id=pessoa_id)
+    
+    if request.method == 'POST':
+        confirmacao = request.POST.get('confirmacao')
+        if confirmacao == 'EXCLUIR':
+            Animal.objects.filter(doador=pessoa).delete()
+            
+            if 'pessoa_id' in request.session:
+                del request.session['pessoa_id']
+            
+            pessoa.delete()
+            
+            messages.success(request, 'Sua conta foi excluída com sucesso.')
+            return redirect('index')
+        else:
+            messages.error(request, 'Confirmação incorreta.')
+    
+    return render(request, 'excluir_perfil.html', {'pessoa': pessoa})
+
 def quero_adotar_view(request, animal_id):
     animal = get_object_or_404(Animal, id=animal_id)
     adotante = get_object_or_404(Pessoa, id=request.session.get('pessoa_id'))

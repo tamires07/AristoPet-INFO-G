@@ -8,6 +8,7 @@ class Pessoa(models.Model):
     email = models.EmailField(unique=True, verbose_name="Email")
     senha = models.CharField(max_length=128, verbose_name="Senha")
     telefone = models.CharField(max_length=15, verbose_name="Telefone")
+    fotoperfil = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True, verbose_name="Foto de Perfil")
 
     def set_password(self, raw_password):
         self.senha = make_password(raw_password)
@@ -16,7 +17,7 @@ class Pessoa(models.Model):
         return check_password(raw_password, self.senha)
     
     def __str__(self):
-        return f"{self.nome}, {self.data_nasc}, {self.endereco}, {self.email}, {self.senha}, {self.telefone}"
+        return f"{self.nome}, {self.data_nasc}, {self.endereco}, {self.email}, {self.senha}, {self.telefone}, {self.fotoperfil}"
 
     class Meta:
         verbose_name = "Pessoa"
