@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Criar Evento de Adoção</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="icon" href="{% static 'img/icon.ico' %}" type="image/x-icon"/>
+
+    <style>
+    body{
+        background-color: #ffff;
+        cursor: url("{% static 'img/paw.png' %}"), auto;
+    }
+
+    a, button, .custom-file-upload, input, select, textarea {
+        cursor: url("{% static 'img/pawclick.png' %}"), pointer;
+    }
+
+    .container{
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .formulario{
+        background-color: #ffefcf;
+        padding: 30px;
+        margin: 5vh auto;
+        max-width: 600px;
+        border: solid 1px grey;
+        border-radius: 30px;
+        text-align: center;
+    }
+
+    .formulario, input, select, textarea{
+        text-align: center;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .custom-file-upload {
+        background-color: #245ac0;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: inline-block;
+        margin: 10px 0;
+    }
+
+    .custom-file-upload:hover {
+        background-color: #163392;
+    }
+
+    .btn-voltar {
+        margin: 20px;
+    }
+    </style>
+</head>
+<body>
+    {% include 'partials/header.html' %}
+
+    <div class="container text-center">
+        <h1>Criar Evento</h1>
+    </div>
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                {% if 'evento' in message.tags or 'sucesso' in message.tags or 'erro' in message.tags %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <form method="post" class="formulario" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="id_nome" class="form-label"><b>Nome do Evento</b></label>
+            <input type="text" name="nome" id="id_nome" class="form-control" placeholder="Digite o nome do evento" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_data" class="form-label"><b>Data e horario do Evento</b></label>
+            <input type="datetime-local" name="data_hora" id="id_data_hora" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_local" class="form-label"><b>Local</b></label>
+            <input type="text" name="local" id="id_local" class="form-control" placeholder="Ex: Parque Central, Praça da Matriz..." required>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_cidade" class="form-label"><b>Cidade</b></label>
+            <input type="text" name="cidade" id="id_cidade" class="form-control" placeholder="Digite a cidade do evento" required>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-lg">Criar Evento</button>
+    </form>
+
+    <div class="text-center btn-voltar">
+        <a href="{% url 'index' %}" class="btn btn-secondary px-4">Voltar para Início</a>
+        <a href="{% url 'evento' %}" class="btn btn-secondary px-4">Voltar para Eventos</a>
+    </div>
+
+    {% include 'partials/footer.html' %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+    <script>
+        document.getElementById('id_imagem').addEventListener('change', function(e) {
+            var fileName = e.target.files[0].name;
+            document.getElementById('file-name').textContent = 'Arquivo selecionado: ' + fileName;
+        });
+
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById('id_data').min = today;
+    </script>
+</body>
+</html>

@@ -82,12 +82,12 @@ def buscarView(request):
     
     resultados_animais = Animal.objects.filter(nome__icontains=query)
 
-    resultados_eventos = Evento.objects.filter(nome__icontains=query)
+    resultados_evento = Evento.objects.filter(nome__icontains=query)
 
     return render(request, 'buscar.html', {
         'query': query,
         'resultados_animais': resultados_animais,
-        'resultados_eventos': resultados_eventos,
+        'resultados_evento': resultados_evento,
     })
 
 
@@ -154,47 +154,55 @@ def editarAnimalView(request, pk):
     
     return render(request, 'editar_animal.html', {'form': form, 'animal': animal})
 
-def eventos(request, id=None):
-    if id:
-        evento = get_object_or_404(Evento, id=id)
-    else:
-        evento = None
+def evento_view(request):
+    """Página principal de evento - mostra cards"""
+    evento = Evento.objects.all().order_by('data_hora')
+    
+    context = {
+        'evento': evento
+    }
+    return render(request, 'evento.html', context)
 
-    if request.method == "POST":
-        nome = request.POST["nome"]
-        instituicao = request.POST["instituicao"]
-        data_hora_str = request.POST.get("data_hora", "")
-        if data_hora_str:
-            data_hora = datetime.strptime(data_hora_str, "%Y-%m-%dT%H:%M")
-        else:
-            data_hora = None 
+def criar_evento_view(request):
+    """Página de criação de evento - formulário"""
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        instituicao = request.POST.get('instituicao')
+        data_hora = request.POST.get('data_hora')
+        local = request.POST.get('local')
+        cidade = request.POST.get('cidade')
+        
+        # Cria o evento
+        evento = Evento.objects.create(
+            nome=nome,
+            instituicao=instituicao,
+            data_hora=data_hora,
+            local=local,
+            cidade=cidade
+        )
+        
+        messages.success(request, 'Evento criado com sucesso!')
+        return redirect('evento')
+    
+    return render(request, 'criar_evento.html')
 
-        local = request.POST["local"]
-        descricao = request.POST["descricao"]
+def editar_evento_view(request, evento_id):
+    """Página de edição de evento"""
+    evento = get_object_or_404(Evento, id=evento_id)
+    
+    if request.method == 'POST':
+        evento.nome = request.POST.get('nome')
+        evento.instituicao = request.POST.get('instituicao')
+        evento.data_hora = request.POST.get('data_hora')
+        evento.local = request.POST.get('local')
+        evento.cidade = request.POST.get('cidade')
+        evento.save()
+        
+        messages.success(request, 'Evento atualizado com sucesso!')
+        return redirect('evento')
+    
+    return render(request, 'criar_evento.html', {'evento': evento})
 
-        if evento:
-            evento.nome = nome
-            evento.instituicao = instituicao
-            evento.data_hora = data_hora
-            evento.local = local
-            evento.descricao = descricao
-            evento.save()
-        else:
-            Evento.objects.create(
-                nome=nome,
-                instituicao=instituicao,
-                data_hora=data_hora,
-                local=local,
-                descricao=descricao,
-            )
-        return redirect("evento")
-
-    eventos = Evento.objects.all()
-
-    return render(request, "evento.html", {
-        "evento": evento,
-        "eventos": eventos,
-    })
 
 def perfil_usuario(request):
     pessoa_id = request.session.get('pessoa_id')
@@ -230,10 +238,10 @@ def editar_perfil_view(request):
         pessoa.endereco = request.POST.get('endereco')
         pessoa.data_nasc = request.POST.get('data_nasc')
         
-        if 'fotoperfil' in request.FILES:
-            foto = request.FILES['fotoperfil']
+        if 'foto_perfil' in request.FILES:
+            foto = request.FILES['foto_perfil']
             print(f"✅ Foto recebida: {foto.name} ({foto.size} bytes)")
-            pessoa.fotoperfil = foto
+            pessoa.foto_perfil = foto
         else:
             print("❌ Nenhuma foto recebida no request.FILES")
         
@@ -241,11 +249,12 @@ def editar_perfil_view(request):
             messages.error(request, 'Este email já está em uso.')
         else:
             pessoa.save()
-            print(f"✅ Pessoa salva: {pessoa.nome}, Foto: {pessoa.fotoperfil}")
+            print(f"✅ Pessoa salva: {pessoa.nome}, Foto: {pessoa.foto_perfil}")
             messages.success(request, 'Perfil atualizado com sucesso!')
             return redirect('perfil')
     
     return render(request, 'editar_perfil.html', {'pessoa': pessoa})
+
 
 def excluir_perfil_view(request):
     pessoa_id = request.session.get('pessoa_id')

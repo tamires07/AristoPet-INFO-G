@@ -8,7 +8,7 @@ class Pessoa(models.Model):
     email = models.EmailField(unique=True, verbose_name="Email")
     senha = models.CharField(max_length=128, verbose_name="Senha")
     telefone = models.CharField(max_length=15, verbose_name="Telefone")
-    fotoperfil = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True, verbose_name="Foto de Perfil")
+    foto_perfil = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True, verbose_name="Foto de Perfil")
 
     def set_password(self, raw_password):
         self.senha = make_password(raw_password)
@@ -73,10 +73,10 @@ class Evento(models.Model):
     instituicao = models.CharField(max_length=200, verbose_name="Instituição")
     data_hora = models.DateTimeField(verbose_name="Data e Hora do Evento")
     local = models.CharField(max_length=200, verbose_name="Local do Evento")
-    descricao = models.TextField(verbose_name="Descrição do Evento")
+    cidade = models.CharField(max_length=100, verbose_name="Cidade")
 
     def __str__(self):
-        return f"{self.nome}, {self.instituicao}, {self.data_hora}, {self.local}, {self.descricao}"
+        return f"{self.nome}, {self.instituicao}, {self.data_hora}, {self.local}, {self.cidade}"
 
     class Meta:
         verbose_name = "Evento"
