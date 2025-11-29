@@ -42,10 +42,18 @@
 <body>
     {% include 'partials/header.html' %}
 
-    <!-- Mensagem de boas vindas -->
     <div class="container text-center">
         <h1><b>Cadastre-se</b></h1>
     </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'cadastro' in message.tags %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
     <form class="formulario" method="POST" action="{% url 'cadastro' %}">
         {% csrf_token %}
         <div class="mb-3">

@@ -21,7 +21,6 @@
     .formulario{
         background-color: #ffefcf;
         padding: 10px;
-        margin-top: 5vh;
         margin-left: 80vh;
         margin-right: 80vh;
         border: solid 1px grey;
@@ -80,7 +79,12 @@
     
         <div class="mb-3">
             <label for="id_especie" class="form-label"><b>Espécie</b></label>
-            <input type="text" name="especie" id="id_especie" class="form-control" placeholder="Ex: cachorro, gato..." required>
+            <select name="especie" id="id_especie" class="form-control" required>
+                <option value="">Selecione a Espécie</option>
+                <option value="Macho">Cão</option>
+                <option value="Fêmea">Gato</option>
+                <option value="Fêmea">Pássaro</option>
+            </select>
         </div>
     
         <div class="mb-3">

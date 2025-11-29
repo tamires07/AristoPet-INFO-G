@@ -58,37 +58,7 @@
                             {% endfor %}
                         {% endif %}
 
-                        <!-- ✅ SEÇÃO DA FOTO CORRIGIDA -->
-                        <div class="text-center mb-4">
-                            {% if pessoa.foto_perfil %}
-                                <img src="{{ pessoa.foto_perfil.url }}" class="foto-perfil mb-2" alt="Foto de perfil">
-                                <p class="text-muted">Foto atual</p>
-                            {% else %}
-                                <div class="foto-perfil bg-light d-flex align-items-center justify-content-center mx-auto mb-2">
-                                    <span class="text-muted fs-1">👤</span>
-                                </div>
-                                <p class="text-muted">Sem foto de perfil</p>
-                            {% endif %}
-                            
-                            <!-- ✅ BOTÃO CORRETO para upload -->
-                            <div class="file-upload">
-                                <label class="file-upload-btn">
-                                    📷 Escolher Nova Foto
-                                    <!-- ✅ INPUT CORRETO - name="foto_perfil" -->
-                                    <input type="file" name="foto_perfil" id="fotoInput" accept="image/*" required>
-                                </label>
-                            </div>
-                            <small class="text-muted d-block">Formatos: JPG, PNG, GIF • Máx: 5MB</small>
-                            
-                            <!-- ✅ PREVIEW da nova foto -->
-                            <div id="previewContainer" class="mt-3" style="display: none;">
-                                <p class="text-success">Nova foto selecionada:</p>
-                                <img id="previewImage" class="foto-perfil" src="#" alt="Preview" style="display: none;">
-                            </div>
-                        </div>
-
-                        <!-- ✅ FORM CORRETO com enctype -->
-                        <form method="post" enctype="multipart/form-data" id="perfilForm">
+                        <form method="post" id="perfilForm">
                             {% csrf_token %}
                             
                             <div class="mb-3">
@@ -131,25 +101,6 @@
             </div>
         </div>
     </div>
-
-    <!-- ✅ SCRIPT para preview da foto -->
-    <script>
-        document.getElementById('fotoInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const previewContainer = document.getElementById('previewContainer');
-            const previewImage = document.getElementById('previewImage');
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-                    previewContainer.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
 
     {% include 'partials/footer.html' %}
 </body>

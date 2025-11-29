@@ -32,7 +32,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if request.session.pessoa_id %}
+                    {% if user.is_authenticated or request.session.pessoa_id %}
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'perfil' %}">Perfil</a>
                         </li>
@@ -40,9 +40,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Início</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/cadastraranimal/">Cadastrar Animais</a>
-                    </li>
+                    {% if user.is_authenticated or request.session.pessoa_id %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/cadastraranimal/">Cadastrar Animais</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/evento/">Eventos</a>
                     </li>
@@ -51,7 +53,7 @@
                     </li>   
                 </ul>
 
-                {% if request.session.pessoa_id %}
+                {% if user.is_authenticated or request.session.pessoa_id %}
                     <a class="nav-link position-relative mx-2 chat" href="{% url 'minhas_conversas' %}" style="padding-right: 2rem !important;">
                         <i class="bi bi-chat-dots"></i> Chats
                         {% if mensagens_nao_lidas > 0 %}
@@ -66,7 +68,7 @@
                     <input name="q" class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search"/>
                     <button class="btn btn-success" type="submit">Buscar</button>
                 </form>
-                {% if request.session.pessoa_id %}
+                {% if user.is_authenticated %}
                     <a class="btn btn-danger" href="{% url 'logout' %}">Sair</a>
                 {% else %}
                     <a class="btn btn-primary" href="{% url 'login' %}">Entrar</a>

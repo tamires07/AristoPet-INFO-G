@@ -96,9 +96,9 @@
 
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-success text-center mx-auto" style="max-width: 500px;">
-                {{ message }}
-            </div>
+            {% if 'evento' in message.tags %}
+                <div class="alert alert-success text-center mx-auto" style="max-width: 500px;">{{ message }}</div>
+            {% endif %}
         {% endfor %}
     {% endif %}
 

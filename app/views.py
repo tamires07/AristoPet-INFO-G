@@ -44,12 +44,12 @@ def cadastrar_usuario(request):
             endereco=endereco,
             telefone=telefone,
             email=email,
-            senha=make_password(senha)  # 🔐 CORREÇÃO AQUI
+            senha=make_password(senha)
         )
-        pessoa.save()  # Remove o set_password() anterior
+        pessoa.save()
 
         request.session['pessoa_id'] = pessoa.id
-        messages.success(request, 'Cadastro realizado com sucesso!')
+        messages.success(request, 'Cadastro realizado com sucesso!', extra_tags='cadastro_sucesso')
         return redirect('index')
 
     return render(request, 'pessoa.html')
@@ -106,7 +106,7 @@ def cadastrarAnimalView(request):
 
             animal.save()
             messages.success(request, 'Animal cadastrado com sucesso!', extra_tags='animal_success')
-            return redirect('cadastraranimal')
+            return redirect('index')
         else:
             messages.error(request, 'Erro no formulário. Verifique os dados.', extra_tags='animal_error')
     else:
@@ -130,7 +130,7 @@ def deletarAnimalView(request, pk):
     
     animal.delete()
     messages.success(request, 'Animal excluído com sucesso!')
-    return redirect('perfil')
+    return redirect('index')
 
 def detalheAnimal(request, pk):
     animal = get_object_or_404(Animal, pk=pk)
@@ -154,8 +154,8 @@ def editarAnimalView(request, pk):
     
     return render(request, 'editar_animal.html', {'form': form, 'animal': animal})
 
+
 def evento_view(request):
-    """Página principal de evento - mostra cards"""
     evento = Evento.objects.all().order_by('data_hora')
     
     context = {
@@ -163,8 +163,8 @@ def evento_view(request):
     }
     return render(request, 'evento.html', context)
 
+
 def criar_evento_view(request):
-    """Página de criação de evento - formulário"""
     if request.method == 'POST':
         nome = request.POST.get('nome')
         instituicao = request.POST.get('instituicao')
@@ -172,7 +172,6 @@ def criar_evento_view(request):
         local = request.POST.get('local')
         cidade = request.POST.get('cidade')
         
-        # Cria o evento
         evento = Evento.objects.create(
             nome=nome,
             instituicao=instituicao,
@@ -181,13 +180,12 @@ def criar_evento_view(request):
             cidade=cidade
         )
         
-        messages.success(request, 'Evento criado com sucesso!')
+        messages.success(request, 'Evento criado com sucesso!', extra_tags='evento_sucesso')
         return redirect('evento')
     
     return render(request, 'criar_evento.html')
 
 def editar_evento_view(request, evento_id):
-    """Página de edição de evento"""
     evento = get_object_or_404(Evento, id=evento_id)
     
     if request.method == 'POST':
@@ -230,7 +228,7 @@ def editar_perfil_view(request):
     pessoa = get_object_or_404(Pessoa, id=pessoa_id)
     
     if request.method == 'POST':
-        print("📸 DEBUG: Arquivos recebidos:", request.FILES)
+        print("📸 DEBUG: Arquivos recebidos:", request.FILES) #Apagar isso depois
         
         pessoa.nome = request.POST.get('nome')
         pessoa.email = request.POST.get('email')
@@ -238,18 +236,10 @@ def editar_perfil_view(request):
         pessoa.endereco = request.POST.get('endereco')
         pessoa.data_nasc = request.POST.get('data_nasc')
         
-        if 'foto_perfil' in request.FILES:
-            foto = request.FILES['foto_perfil']
-            print(f"✅ Foto recebida: {foto.name} ({foto.size} bytes)")
-            pessoa.foto_perfil = foto
-        else:
-            print("❌ Nenhuma foto recebida no request.FILES")
-        
         if Pessoa.objects.filter(email=pessoa.email).exclude(id=pessoa.id).exists():
             messages.error(request, 'Este email já está em uso.')
         else:
             pessoa.save()
-            print(f"✅ Pessoa salva: {pessoa.nome}, Foto: {pessoa.foto_perfil}")
             messages.success(request, 'Perfil atualizado com sucesso!')
             return redirect('perfil')
     
