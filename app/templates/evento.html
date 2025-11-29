@@ -24,6 +24,7 @@
         .card {
             background-color: #e1d3be;
             color: black;
+            margin-bottom: 50px;
         }
 
         .container {
@@ -77,21 +78,9 @@
 
 <body>
     {% include 'partials/header.html' %}
-
-    {% if pessoa %}
-        <h2 class="text">Olá, {{ pessoa.nome }}! 🐾</h2>
-    {% endif %}
     
     <div class="container text-center">
-        <h1><b>Eventos de Adoção</b></h1>
-        <p>
-            Encontre eventos de adoção perto de você! <br>
-            Participe e conheça diversos animais esperando por um lar.
-        </p>
-        
-        <a href="{% url 'criar_evento' %}" class="btn btn-success">
-            <b>+ Criar Novo Evento</b>
-        </a>
+        <h1><b>Eventos disponíveis 🐾</b></h1>
     </div>
 
     {% if messages %}
@@ -102,41 +91,31 @@
         {% endfor %}
     {% endif %}
 
-    <!-- Lista de Eventos -->
+    {% if not eventos %}
+        <div class="empty-state">
+            <h3>Nenhum evento cadastrado</h3>
+        </div>
+    {% endif %}
+
     <div class="container text-center">
-        <div class="row gx-5">
             {% for evento in eventos %}
-            <div class="col">
-                <div class="card" style="width: 18rem; overflow: hidden;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ evento.nome }}</h5>
-                        <p class="card-text">
-                            <strong>Data:</strong> {{ evento.data|date:"d/m/Y" }} <br>
-                            <strong>Horário:</strong> {{ evento.horario }} <br>
-                            <strong>Local:</strong> {{ evento.local }} <br>
-                            <strong>Cidade:</strong> {{ evento.cidade }} <br>
-                        </p>
-                        <!-- Links de ação -->
-                        <a href="{% url 'detalhe_evento' evento.pk %}" class="btn btn-success">Ver Detalhes</a>
-                        {% if request.session.pessoa_id == evento.organizador.id %}
-                            <a href="{% url 'editar_evento' evento.pk %}" class="btn btn-primary">Editar</a>
-                            <a href="{% url 'deletar_evento' evento.pk %}" class="btn btn-danger">Excluir</a>
-                        {% endif %}
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ evento.nome }}</h3>
+                    <strong>Intituição:</strong> {{ evento.instituicao }} <br>
                 </div>
-            </div>
-            {% empty %}
-            <!-- Estado vazio -->
-            <div class="empty-state">
-                <h3>Nenhum evento cadastrado</h3>
-                <p>Seja o primeiro a criar um evento de adoção!</p>
-                <a href="{% url 'criar_evento' %}" class="btn btn-success">
-                    <b>Criar Primeiro Evento</b>
-                </a>
+                <div class="card-body">
+                    <a href="#" class="btn btn-success" target="blank">Saiba mais</a>
+                </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
+    <p>
+        Deseja adicionar algum evento? <br> 
+        Contate um algum administrador! <br>
+    </p>
 
     {% include 'partials/footer.html' %}
     <!-- Incluindo jQuery e Bootstrap JS -->

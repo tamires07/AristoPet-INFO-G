@@ -79,15 +79,20 @@ def logout_view(request):
 
 def buscarView(request):
     query = request.GET.get('q', '').strip()  
+
+    from django.db.models import Q
     
-    resultados_animais = Animal.objects.filter(nome__icontains=query)
+    resultados_animais = Animal.objects.filter(Q(especie__icontains=query) | Q(nome__icontains=query))
 
     resultados_evento = Evento.objects.filter(nome__icontains=query)
+
+    resultados_usuario = Pessoa.objects.filter(nome__icontains=query)
 
     return render(request, 'buscar.html', {
         'query': query,
         'resultados_animais': resultados_animais,
         'resultados_evento': resultados_evento,
+        'resultados_usuario': resultados_usuario,
     })
 
 
@@ -148,7 +153,8 @@ def editarAnimalView(request, pk):
         form = AnimalForm(request.POST, request.FILES, instance=animal)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Animal atualizado com sucesso!')
+            messages.success(request, 'Animal atualizado com sucesso!', extra_tags="atualizaranimal_success")
+            return redirect('index')
     else:
         form = AnimalForm(instance=animal)
     
@@ -156,10 +162,10 @@ def editarAnimalView(request, pk):
 
 
 def evento_view(request):
-    evento = Evento.objects.all().order_by('data_hora')
+    eventos = Evento.objects.all().order_by('data_hora')
     
     context = {
-        'evento': evento
+        'eventos': eventos
     }
     return render(request, 'evento.html', context)
 
@@ -183,23 +189,7 @@ def criar_evento_view(request):
         messages.success(request, 'Evento criado com sucesso!', extra_tags='evento_sucesso')
         return redirect('evento')
     
-    return render(request, 'criar_evento.html')
-
-def editar_evento_view(request, evento_id):
-    evento = get_object_or_404(Evento, id=evento_id)
-    
-    if request.method == 'POST':
-        evento.nome = request.POST.get('nome')
-        evento.instituicao = request.POST.get('instituicao')
-        evento.data_hora = request.POST.get('data_hora')
-        evento.local = request.POST.get('local')
-        evento.cidade = request.POST.get('cidade')
-        evento.save()
-        
-        messages.success(request, 'Evento atualizado com sucesso!')
-        return redirect('evento')
-    
-    return render(request, 'criar_evento.html', {'evento': evento})
+    return render(request, 'evento.html')
 
 
 def perfil_usuario(request):

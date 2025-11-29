@@ -36,21 +36,22 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'perfil' %}">Perfil</a>
                         </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Início</a>
-                    </li>
-                    {% if user.is_authenticated or request.session.pessoa_id %}
+
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/cadastraranimal/">Cadastrar Animais</a>
                         </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/evento/">Eventos</a>
-                    </li>
+                    {% else %}
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/pessoa/">Cadastro/Login</a>
-                    </li>   
+                    </li> 
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/evento/">Eventos</a>
+                    </li>  
                 </ul>
 
                 {% if user.is_authenticated or request.session.pessoa_id %}
@@ -68,10 +69,10 @@
                     <input name="q" class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search"/>
                     <button class="btn btn-success" type="submit">Buscar</button>
                 </form>
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated or request.session.pessoa_id %}
                     <a class="btn btn-danger" href="{% url 'logout' %}">Sair</a>
                 {% else %}
-                    <a class="btn btn-primary" href="{% url 'login' %}">Entrar</a>
+                    <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
                 {% endif %}
             </div>
         </div>

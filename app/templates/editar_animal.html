@@ -51,7 +51,12 @@
 
         <div class="mb-3">
             <label for="id_especie" class="form-label"><b>Espécie</b></label>
-            <input type="text" name="especie" id="id_especie" class="form-control" value="{{ animal.especie }}" required>
+            <select name="especie" id="id_especie" class="form-control" required>
+                <option value="">Selecione a Espécie</option>
+                <option value="Cão">Cão</option>
+                <option value="Gato">Gato</option>
+                <option value="Pássaro">Pássaro</option>
+            </select>
         </div>
 
         <div class="mb-3">

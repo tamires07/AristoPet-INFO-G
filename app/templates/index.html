@@ -1,11 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Inicial</title>
+
     <!-- Incluindo Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="icon" href="{% static 'img/icon.ico' %}" type="image/x-icon"/>
@@ -15,6 +15,20 @@
             background: #ffff;
             cursor: url("{% static 'img/paw.png' %}"),
             auto;
+        }
+
+        p {
+            display: flex;
+            font-size: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
         }
 
         a, button, .img-container{
@@ -65,27 +79,12 @@
             margin-right: 50px;
             
         }
-
-        p {
-            display: flex;
-            font-size: 20px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        h2{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 30px;
-        }
     </style>
 </head>
 
 <body>
     {% include 'partials/header.html' %}
 
-    <!-- Mensagem de boas vindas -->
     {% if pessoa %}
         <h2 class="text">Olá, {{ pessoa.nome }}! 🐾</h2>
     {% endif %}
@@ -99,8 +98,6 @@
         </p>
     </div>
 
-    <!-- Incluido os Cards -->
-
     <div class="container text-center">
         <div class="row gx-5">
             {% for animal in animais %}
@@ -108,13 +105,13 @@
                 <div class="card" style="width: 18rem; overflow: hidden;">
 
                     <div class="img-container">
-                        <!-- Se você tiver imagem no modelo, usa aqui. Se não, coloca imagem padrão -->
                         {% if animal.imagem %}
                         <img src="{{ animal.imagem.url }}" class="card-img-top img-clickable" alt="{{ animal.nome }}">
                         {% else %}
                         <img src="https://via.placeholder.com/286x200.png?text=Sem+Imagem" class="card-img-top img-clickable" alt="Sem imagem disponível">
                         {% endif %}
                     </div>
+
                     <div class="card-body">
                         <p class="card-text">
                             Nome: {{ animal.nome }} <br>
@@ -122,7 +119,7 @@
                             Gênero: {{ animal.genero }} <br>
                             Cidade: {{ animal.cidade }}
                         </p>
-                        <!-- Link de exemplo, ajuste se quiser -->
+
                         <a href="{% url 'detalheanimal' animal.pk %}" class="btn btn-success">Entrar</a>
                         {% if request.session.pessoa_id == animal.doador.id %}
                             <a href="{% url 'editaranimal' animal.pk %}" class="btn btn-primary">Editar</a>
@@ -145,5 +142,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 </body>
-
 </html>

@@ -19,9 +19,6 @@ urlpatterns = [
     path('editar-animal/<int:pk>/', editarAnimalView, name='editaranimal'),
     path('evento/', evento_view, name='evento'),
     path('evento/criar/', criar_evento_view, name='criar_evento'),  
-
-    path('evento/editar/<int:evento_id>/', editar_evento_view, name='editar_evento'),
-
     path('perfil/', perfil_usuario, name='perfil'),
     path('perfil/editar/', editar_perfil_view, name='editar_perfil'),
     path('perfil/excluir/', excluir_perfil_view, name='excluir_perfil'),
