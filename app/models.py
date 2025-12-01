@@ -8,6 +8,7 @@ class Pessoa(models.Model):
     email = models.EmailField(unique=True, verbose_name="Email")
     senha = models.CharField(max_length=128, verbose_name="Senha")
     telefone = models.CharField(max_length=15, verbose_name="Telefone")
+    imagem = models.ImageField(upload_to='animais/', blank=True, null=True, verbose_name="Foto de Perfil")
 
     def set_password(self, raw_password):
         self.senha = make_password(raw_password)
@@ -16,7 +17,7 @@ class Pessoa(models.Model):
         return check_password(raw_password, self.senha)
     
     def __str__(self):
-        return f"{self.nome}, {self.data_nasc}, {self.endereco}, {self.email}, {self.senha}, {self.telefone}"
+        return f"{self.nome}, {self.data_nasc}, {self.endereco}, {self.email}, {self.senha}, {self.telefone}, {self.imagem}"
 
     class Meta:
         verbose_name = "Pessoa"
@@ -73,9 +74,10 @@ class Evento(models.Model):
     data_hora = models.DateTimeField(verbose_name="Data e Hora do Evento")
     local = models.CharField(max_length=200, verbose_name="Local do Evento")
     cidade = models.CharField(max_length=100, verbose_name="Cidade")
+    site_instituicao = models.URLField(max_length=500, blank=True, null=True, verbose_name="Link do site") 
 
     def __str__(self):
-        return f"{self.nome}, {self.instituicao}, {self.data_hora}, {self.local}, {self.cidade}"
+        return f"{self.nome}, {self.instituicao}, {self.data_hora}, {self.local}, {self.cidade}, {self.site_instituicao}"
 
     class Meta:
         verbose_name = "Evento"

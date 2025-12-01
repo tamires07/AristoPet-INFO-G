@@ -133,9 +133,20 @@ def deletarAnimalView(request, pk):
         messages.error(request, 'Você só pode excluir seus próprios animais.')
         return redirect('index')
     
-    animal.delete()
-    messages.success(request, 'Animal excluído com sucesso!')
-    return redirect('index')
+    if request.method == 'POST':
+        confirmacao = request.POST.get('confirmacao')
+        if confirmacao == 'EXCLUIR':
+            if animal.imagem:
+                animal.imagem.delete(save=False)
+            
+            nome_animal = animal.nome
+            animal.delete()
+            
+            messages.success(request, f'Animal "{nome_animal}" excluído com sucesso!')
+            return redirect('index')
+    else:
+        return render(request, 'confirmar_exclusao_animal.html', {'animal': animal})
+
 
 def detalheAnimal(request, pk):
     animal = get_object_or_404(Animal, pk=pk)
@@ -177,19 +188,35 @@ def criar_evento_view(request):
         data_hora = request.POST.get('data_hora')
         local = request.POST.get('local')
         cidade = request.POST.get('cidade')
+        site_instituicao = request.POST.get('site_instituicao')
         
         evento = Evento.objects.create(
             nome=nome,
             instituicao=instituicao,
             data_hora=data_hora,
             local=local,
-            cidade=cidade
+            cidade=cidade,
+            site_instituicao=site_instituicao,
         )
         
         messages.success(request, 'Evento criado com sucesso!', extra_tags='evento_sucesso')
         return redirect('evento')
     
     return render(request, 'evento.html')
+
+
+def detalhe_evento_view(request, evento_id):
+    try:
+        evento = Evento.objects.get(id=evento_id)
+    except Evento.DoesNotExist:
+        messages.error(request, 'Evento não encontrado!')
+        return redirect('evento')
+    
+    context = {
+        'evento': evento
+    }
+    return render(request, 'detalhe_evento.html', context)
+
 
 
 def perfil_usuario(request):
@@ -209,6 +236,7 @@ def perfil_usuario(request):
     
     return render(request, 'perfil.html', context)
 
+
 def editar_perfil_view(request):
     pessoa_id = request.session.get('pessoa_id')
     if not pessoa_id:
@@ -218,13 +246,7 @@ def editar_perfil_view(request):
     pessoa = get_object_or_404(Pessoa, id=pessoa_id)
     
     if request.method == 'POST':
-        print("📸 DEBUG: Arquivos recebidos:", request.FILES) #Apagar isso depois
-        
-        pessoa.nome = request.POST.get('nome')
-        pessoa.email = request.POST.get('email')
-        pessoa.telefone = request.POST.get('telefone')
-        pessoa.endereco = request.POST.get('endereco')
-        pessoa.data_nasc = request.POST.get('data_nasc')
+        form = PessoaForm(request.POST, request.FILES, instance=pessoa)
         
         if Pessoa.objects.filter(email=pessoa.email).exclude(id=pessoa.id).exists():
             messages.error(request, 'Este email já está em uso.')

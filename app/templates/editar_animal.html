@@ -81,12 +81,18 @@
         <div class="mb-3">
             <label class="form-label"><b>Imagem Atual</b></label><br>
             {% if animal.imagem %}
-                <img src="{{ animal.imagem.url }}" width="200" class="mb-2"><br>
+                <img src="{{ animal.imagem.url }}" width="200" class="mb-2 rounded"><br>
+                <small class="text-muted">Imagem atual do animal</small><br>
+            {% else %}
+                <p class="text-muted">Nenhuma imagem cadastrada</p>
             {% endif %}
-            <label for="id_imagem" class="btn btn-primary">
-                Alterar Imagem
-            </label>
             
+            <label for="id_imagem" class="btn btn-primary mt-2">
+                <i class="bi bi-camera me-1"></i> Alterar Imagem
+            </label>
+            <input type="file" name="imagem" id="id_imagem" accept="image/*" class="d-none">
+            
+            <div id="file-name" class="mt-2 text-muted"></div>
         </div>
         
         <button type="submit" class="btn btn-success">Salvar Alterações</button>

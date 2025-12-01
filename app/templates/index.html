@@ -12,7 +12,7 @@
 
     <style>
         body {
-            background: #ffff;
+            background: #e7e6e3;
             cursor: url("{% static 'img/paw.png' %}"),
             auto;
         }
@@ -36,7 +36,7 @@
         }
 
         .card {
-            background-color: #e1d3be;
+            background-color: #ccc3b3;
             color: black;
         }
 
@@ -79,10 +79,60 @@
             margin-right: 50px;
             
         }
+
+        .historias-section {
+        border-top: 3px solid #e1d3be;
+        border-bottom: 3px solid #e1d3be;
+        }
+    
+        .carousel-item {
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            min-height: 350px;
+        }
+        
+        .carousel-indicators button {
+            width: 12px !important;
+            height: 12px !important;
+            border-radius: 50%;
+            background-color: #33605a !important;
+        }
+        
+        .carousel-indicators button.active {
+            background-color: #e1d3be !important;
+        }
+        
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%;
+            color: #33605a;
+        }
+        
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #33605a;
+            border-radius: 50%;
+            padding: 15px;
+        }
+        
+        .badge.bg-pink {
+            background-color: #ff6b9d !important;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .carousel-item .row {
+                flex-direction: column;
+            }
+            .carousel-item .col-md-5 {
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     {% include 'partials/header.html' %}
 
     {% if pessoa %}
@@ -94,7 +144,105 @@
         <p>
             Aqui, cada latido e ronronar pode transformar uma vida. <br>
             Adote um pet, ganhe um amor para toda a vida. <br>
-            Conheça algumas dessas fofuras que estão esperando por você!
+
+            {% if not user.is_authenticated or request.session.pessoa_id %}
+                <section class="historias-section" style="background-color: #f8f9fa;">
+                    <div class="container">
+                        <div class="text-center">
+                            <h2 class="display-5">Conheça algumas histórias emocionantes ❤️</h2>
+                            <p class="lead text-muted mx-auto" style="max-width: 700px;">
+                                Cada animal tem uma jornada única. Conheça histórias reais de superação, 
+                                amor e segunda chance que vão aquecer seu coração.
+                            </p>
+                        </div>
+
+                        <div id="historiasCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#historiasCarousel" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#historiasCarousel" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#historiasCarousel" data-bs-slide-to="2"></button>
+                                <button type="button" data-bs-target="#historiasCarousel" data-bs-slide-to="3"></button>
+                            </div>
+                            
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-5">
+                                            <img src="{% static 'img/historia1.jpg' %}" class="d-block w-100 rounded" alt="Thor - Cachorro resgatado" 
+                                                onerror="this.src='https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="p-4">
+                                                <h3 class="text-primary">Thor: Do abandono ao lar amoroso</h3>
+                                                <p class="lead">Encontrado em situação de maus-tratos, Thor estava desnutrido e com medo de humanos.</p>
+                                                <p>Após 3 meses de tratamento e muito amor, ele foi adotado pela família Silva. Hoje, Thor é o guardião da casa e melhor amigo das crianças.</p>
+                                                <div class="mt-4">
+                                                    <span class="badge bg-warning text-dark me-2">Resgatado</span>
+                                                    <span class="badge bg-success me-2">Adotado</span>
+                                                    <span class="badge bg-info">2 anos no novo lar</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="carousel-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-5">
+                                            <img src="{% static 'img/historia3.jpg' %}" class="d-block w-100 rounded" alt="Rex - Cachorro idoso" 
+                                                onerror="this.src='https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="p-4">
+                                                <h3 class="text-primary">Rex: A prova de que idade não é limite</h3>
+                                                <p class="lead">Com 10 anos, Rex foi deixado em um abrigo quando seus donos se mudaram.</p>
+                                                <p>Passou 8 meses esperando, até que um casal de aposentados o viu e se encantou. "Ele nos dá mais alegria do que podemos retribuir", diz Dona Maria, 68 anos.</p>
+                                                <div class="mt-4">
+                                                    <span class="badge bg-secondary me-2">Idoso</span>
+                                                    <span class="badge bg-success me-2">Adotado</span>
+                                                    <span class="badge bg-info">Feliz na aposentadoria</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="carousel-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-5">
+                                            <img src="{% static 'img/historia4.jpg' %}" class="d-block w-100 rounded" alt="Mel - Família de gatos" 
+                                                onerror="this.src='https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="p-4">
+                                                <h3 class="text-primary">Mel e seus filhotes: Um final feliz em família</h3>
+                                                <p class="lead">Mel foi resgatada grávida das ruas. Deu à luz 4 filhotes em um abrigo.</p>
+                                                <p>A surpresa: uma única família adotou todos! "Não tínhamos coragem de separá-los", conta a mãe adotiva. Hoje, os 5 gatos vivem felizes juntos.</p>
+                                                <div class="mt-4">
+                                                    <span class="badge bg-pink me-2">Família</span>
+                                                    <span class="badge bg-success me-2">Todos adotados</span>
+                                                    <span class="badge bg-info">Juntos para sempre</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="carousel-control-prev" type="button" data-bs-target="#historiasCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#historiasCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Próximo</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
+
+            <h2 class="mt-5">Seu novo melhor amigo está esperando por você. Adote responsavelmente.</h2>
         </p>
     </div>
 

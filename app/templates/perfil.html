@@ -12,7 +12,7 @@
     
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #e7e6e3;
         }
         .perfil-header {
             background-color: #33605a;
@@ -27,7 +27,7 @@
         .animal-card {
             transition: all 0.3s ease;
             border: none;
-            background-color: #e1d3be;
+            background-color: #ccc3b3;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
@@ -78,34 +78,28 @@
     <div class="perfil-header">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-2 text-center">
-                    <div class="avatar">
-                        {% if pessoa.foto_perfil %}
-                            <img src="{{ pessoa.foto_perfil.url }}" alt="{{ pessoa.nome }}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;" onerror= "this.src='https://via.placeholder.com/120x120/667eea/ffffff?text={{ pessoa.nome.0|upper }}'">
-                        {% else %}
-                            <div style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #e1d3be 0%, #3b3326 100%); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white;">
-                                {{ pessoa.nome.0|upper }}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="card-body">
-                        <div class="btn-group">
-                            <a href="{% url 'editar_perfil' %}" class="btn btn-outline-warning">✏️</a>
-                            <a href="{% url 'excluir_perfil' %}" class="btn btn-outline-danger">🗑️</a>
-                        </div>
+                <div class="d-flex align-items-center mb-2">
+                    <h1 class="display-5 me-3 mb-0">{{ pessoa.nome }}</h1>
+                    <div class="btn-group">
+                        <a href="{% url 'editar_perfil' %}" class="btn btn-outline-warning btn-sm" 
+                           title="Editar Perfil" data-bs-toggle="tooltip">
+                            ✏️
+                        </a>
+                        <a href="{% url 'excluir_perfil' %}" class="btn btn-outline-danger btn-sm"
+                           title="Excluir Conta" data-bs-toggle="tooltip">
+                            🗑️
+                        </a>
                     </div>
                 </div>
                 
                 <div class="col-md-8">
-                    <h1 class="display-5">{{ pessoa.nome }}</h1>
                     <p class="lead mb-1"><strong>Email:</strong> {{ pessoa.email }}</p>
-                    <p class="mb-1"><strong>Telefone:</strong> {{ pessoa.telefone }}</p>
-                    <p class="mb-0"><strong>Endereço:</strong> {{ pessoa.endereco }}</p>
-                    <p class="mb-0"><strong>Data de Nascimento:</strong> {{ pessoa.data_nasc }}</p>
+                    <p class="lead mb-1"><strong>Telefone:</strong> {{ pessoa.telefone }}</p>
+                    <p class="lead mb-0"><strong>Endereço:</strong> {{ pessoa.endereco }}</p>
+                    <p class="lead mb-0"><strong>Data de Nascimento:</strong> {{ pessoa.data_nasc }}</p>
                 </div>
 
-                <div class="col-md-2 text-center">
+                <div class="col-md-4 text-center">
                     <span class="badge bg-light text-dark fs-6">{{ animais|length }} animal(is) registrado(s)</span>
                 </div>
             </div>

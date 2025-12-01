@@ -12,7 +12,7 @@
 
     <style>
         body {
-            background: #ffff;
+            background: #e7e6e3;
             cursor: url("{% static 'img/paw.png' %}"),
             auto;
         }
@@ -22,7 +22,7 @@
         }
 
         .card {
-            background-color: #e1d3be;
+            background-color: #ccc3b3;
             color: black;
             margin-bottom: 50px;
         }
@@ -104,8 +104,8 @@
                     <h3 class="card-title">{{ evento.nome }}</h3>
                     <strong>Intituição:</strong> {{ evento.instituicao }} <br>
                 </div>
-                <div class="card-body">
-                    <a href="#" class="btn btn-success" target="blank">Saiba mais</a>
+                <div class="card-body" style="background-color: #f0f0f0;">
+                    <a href="{% url 'detalhe_evento' evento.id %}" class="btn btn-success">Saiba mais</a>
                 </div>
             </div>
             {% endfor %}
@@ -114,7 +114,7 @@
 
     <p>
         Deseja adicionar algum evento? <br> 
-        Contate um algum administrador! <br>
+        Contate um dos administradores! <br>
     </p>
 
     {% include 'partials/footer.html' %}

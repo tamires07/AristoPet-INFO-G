@@ -54,7 +54,7 @@
         {% endfor %}
     {% endif %}
 
-    <form class="formulario" method="POST" action="{% url 'cadastro' %}">
+    <form class="formulario" method="POST" enctype="multipart/form-data" action="{% url 'cadastro' %}">
         {% csrf_token %}
         <div class="mb-3">
             <label for="nome" class="form-label"><b>Nome</b></label>

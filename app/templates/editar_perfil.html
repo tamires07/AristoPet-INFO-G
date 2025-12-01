@@ -58,7 +58,7 @@
                             {% endfor %}
                         {% endif %}
 
-                        <form method="post" id="perfilForm">
+                        <form method="post" id="perfilForm" enctype="multipart/form-data">
                             {% csrf_token %}
                             
                             <div class="mb-3">

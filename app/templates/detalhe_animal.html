@@ -3,51 +3,175 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ animal.nome }} - Detalhes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="{% static 'img/icon.ico' %}" type="image/x-icon"/>
+    
+    <style>
+        body {
+            background: #e7e6e3;
+            cursor: url("{% static 'img/paw.png' %}"), auto;
+        }
+
+        a, button {
+            cursor: url("{% static 'img/pawclick.png' %}"), pointer;
+        }
+
+        .card {
+            background-color: #f3f3f3;
+            color: black;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            justify-content: center;
+        }
+
+        .animal-img {
+            max-height: 300px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .btn-voltar {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-voltar:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+
+        .btn-adotar {
+            background-color: #28a745;
+            color: white;
+            font-weight: 500;
+        }
+
+        .btn-adotar:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+        .doador-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     {% include 'partials/header.html' %}
 
-    <div class="container mt-4 text-center">
-        <h1>{{ animal.nome }}</h1>
-        {% if animal.imagem %}
-            <img src="{{ animal.imagem.url }}" alt="{{ animal.nome }}" class="img-fluid rounded mb-3" style="max-height: 300px;">
-        {% endif %}
-        
-        <p><b>Espécie:</b> {{ animal.especie }}</p>
-        <p><b>Gênero:</b> {{ animal.genero }}</p>
-        <p><b>Cidade:</b> {{ animal.cidade }}</p>
-        <p><b>Descrição:</b> {{ animal.descricao }}</p>
+    <div class="container text-center mt-3">
+        <h1><b>Informações do Animal 🐾</b></h1>
+    </div>
 
-        <div class="card mt-4">
-            <div class="card-body text-center">
-                <h5 class="card-title">Interessado em adotar {{ animal.nome }}?</h5>
-                <p class="card-text">Entre em contato com o doador para combinar os detalhes da adoção.</p>
-                
-                {% if request.session.pessoa_id %}
-                    {% if request.session.pessoa_id != animal.doador.id %}
-                        <a href="{% url 'quero_adotar' animal.id %}" class="btn btn-success btn-lg">
-                            🐾 Quero Adotar!
-                        </a>
-                    {% else %}
-                        <p class="text-muted">(Você é o doador deste animal)</p>
-                    {% endif %}
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-outline-success">
-                        Faça login para adotar
-                    </a>
+    <div class="container mb-5 mt-5 text-center">
+        <div class="card p-4">
+            <h1 class="mb-4">{{ animal.nome }}</h1>
+            
+            {% if animal.imagem %}
+                <img src="{{ animal.imagem.url }}" alt="{{ animal.nome }}" class="animal-img mb-4">
+            {% else %}
+                <div class="animal-img mb-4 d-flex align-items-center justify-content-center" 
+                     style="background: linear-gradient(135deg, #e1d3be 0%, #3b3326 100%); color: white;">
+                    <h2>🐕‍🦺</h2>
+                </div>
+            {% endif %}
+            
+            <div class="text-start">
+                <div class="info-item">
+                    <p><b>Nome:</b> {{ animal.nome }}</p>
+                </div>
+
+                <div class="info-item">
+                    <p><b>Espécie:</b> {{ animal.especie }}</p>
+                </div>
+
+                <div class="info-item">
+                    <p><b>Gênero:</b> {{ animal.genero }}</p>
+                </div>
+
+                <div class="info-item">
+                    <p><b>Cidade:</b> {{ animal.cidade }}</p>
+                </div>
+
+                {% if animal.idade %}
+                <div class="info-item">
+                    <p><b>Idade:</b> {{ animal.idade }}</p>
+                </div>
+                {% endif %}
+
+                {% if animal.descricao %}
+                <div class="info-item">
+                    <p><b>Descrição:</b> {{ animal.descricao }}</p>
+                </div>
                 {% endif %}
             </div>
-        </div>
 
-        <a href="{% url 'index' %}" class="btn btn-secondary">Voltar</a>
+            <!-- Informações do Doador -->
+            <div class="doador-info mt-4">
+                <h5 class="mb-3">📞 Informações do doador</h5>
+                <p class="mb-2"><b>Nome:</b> {{ animal.doador.nome }}</p>
+                {% if animal.doador.telefone %}
+                <p class="mb-2"><b>Telefone:</b> {{ animal.doador.telefone }}</p>
+                {% endif %}
+                {% if animal.doador.email %}
+                <p class="mb-0"><b>Email:</b> {{ animal.doador.email }}</p>
+                {% endif %}
+            </div>
+
+            <div class="card mt-4" style="border: none;">
+                <div class="card-body text-center">
+                    {% if request.session.pessoa_id %}
+                        {% if request.session.pessoa_id != animal.doador.id %}
+                            <h5 class="card-title">Interessado em adotar {{ animal.nome }}?</h5>
+                            <p class="card-text">Entre em contato com o doador para combinar os detalhes da adoção.</p>
+                            <a href="{% url 'quero_adotar' animal.id %}" class="btn btn-adotar btn-lg">
+                                🐾 Quero Adotar!
+                            </a>
+                        {% else %}
+                            <div class="alert alert-info">
+                                Você é o doador deste animal
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-success btn-lg">
+                            Faça login para adotar
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a href="{% url 'index' %}" class="btn btn-voltar">← Voltar para Página Inicial</a>
+            </div>
+        </div>
     </div>
 
     {% include 'partials/footer.html' %}
+    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

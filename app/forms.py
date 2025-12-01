@@ -18,3 +18,8 @@ class EventoForm(forms.ModelForm):
             'data_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'descricao': forms.Textarea(attrs={'rows': 4}),
         }
+
+class PessoaForm(forms.ModelForm):
+    class Meta:
+        model = Pessoa
+        fields = ['nome', 'data_nasc', 'endereco', 'email', 'telefone', 'imagem']
